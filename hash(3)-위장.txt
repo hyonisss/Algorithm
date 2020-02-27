@@ -1,0 +1,112 @@
+---
+title: 프로그래머스-Hash3(Java)
+subtitle: 위장
+date: 2020-02-27 20:56:32
+tags: ["algorithm", "programmers", "java"]
+---
+## 프로그래머스 Hash(3)
+
+#### 위장
+
+* * *
+> 풀이1(내 풀이)
+<pre>
+<code>
+import java.util.*;
+class Solution {
+    public int solution(String[][] clothes) {
+        int answer = 1;
+        HashMap<String, Integer> hash = new HashMap<String, Integer> ();
+        for(int i=0; i<clothes.length; i++) {
+            if(hash.containsKey(clothes[i][1])) {
+                hash.put(clothes[i][1], hash.get(clothes[i][1])+1);
+            }
+            else {
+                hash.put(clothes[i][1], 1);
+            }
+        }
+        for(String key: hash.keySet()) {
+            answer *= (hash.get(key)+1);
+            
+        }
+        return answer-1;
+    }
+}
+</code>
+</pre>
+
+* * *
+
+**문제 풀이**
+
+만약 옷 종류가 A, B, C 3개라면,   
+
+    answer = ( A 종류 옷 개수 + 1 ) * ( B 종류 옷 개수 + 1 ) * ( C 종류 옷 개수 + 1 )  - 1 
+    
+마지막 -1 은 아무것도 안 입는 경우의 수를 빼야 하기 때문.
+    
+
+* 각 종류 옷의 개수를 구하기 위한 코드
+
+<pre>
+<code>
+HashMap<String, Integer> hash = new HashMap<String, Integer> ();
+for(int i=0; i < clothes.length < i++) {
+    if(hash.containsKey(clothes[i][1]) {                // 해당 Key를 가지고 있으면
+        hash.put(clothes[i][1], hash.get(clothes[i][1]+1);          // 이 종류의 옷 개수를 +1 해준다
+    }
+    else {                                                             // 만약 처음 보는 Key다
+        hash.put(clothes[i][1], 1);                                     // Value에 그냥 1값을 저장해준다 (아직은 1개니까)
+    }   
+}
+</code>
+</pre>
+
+
+
+* answer 계산하는 코드
+
+<pre>
+<code>
+for(String key : hash.keySet()) {      // 중복을 제외한 Key 값들 다 가져와서 key 변수에 저장
+    answer *= hash.get(key) + 1;        // 각 key에 저장된 value(옷의 개수)에 1을 더한 뒤 다 곱하기.
+}
+return answer -1;     // 마지막으로 1 빼주는 거 잊지 않기
+</code>
+</pre>
+
+
+* * *
+
+> 풀이2(다른사람 풀이)
+<pre>
+<code>
+import java.util.*;
+class Solution {
+    public int solution(String[][] clothes) {
+        int answer = 1;
+        HashMap<String, Integer> hash = new HashMap<String, Integer> ();
+        for(int i=0; i<clothes.length; i++) {
+            if(hash.containsKey(clothes[i][1])) {
+                hash.put(clothes[i][1], hash.get(clothes[i][1])+1);
+            }
+            else {
+                hash.put(clothes[i][1], 1);
+            }
+        }
+        for(int value: hash.values()) {    //바뀐 부분
+        answer *= (value + 1); 
+        }
+        return answer-1;
+    }
+}
+</code>
+</pre>
+
+* * *
+
+    Object.values()
+
+전달된 객체가 가지는 파라미터 속성들 값을 가지는 배열을 리턴함
+그걸 정수형 변수로 바로 받아와서 계산하는 구조
+
