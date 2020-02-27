@@ -1,0 +1,52 @@
+---
+title: 프로그래머스 Hash2(Java)
+subtitle: 전화번호 목록
+date: 2020-02-27 15:13:16
+tags: ["algorithm", "programmers", "java"]
+---
+## 프로그래머스 Hash(2)
+
+#### 전화번호 목록
+
+* * *
+
+<pre>
+<code>
+import java.util.*;
+class Solution {
+    public boolean solution(String[] phone_book) {
+        boolean answer = true;                          
+        Arrays.sort(phone_book);
+        for(int i=0; i<phone_book.length-1; i++) {      //-1을 하지 않으면 OverException이 일어남
+            if(phone_book[i+1].startsWith(phone_book[i])) answer = false;
+        }
+        
+        return answer;
+    }
+}
+</code>
+</pre>
+
+다 작성해놓고 주석처리한 부분에서 -1을 하지 않아서 계속 오류가 났다.
+
+* * *
+
+
+**자바에서 배열정리**
+
+    Arrays.sort(배열이름);
+
+오름차순으로 정렬해준다.
+
+["23", "123", "234"] 라는 배열을 위의 함수를 이용해 정렬하면   
+["123", "23", "234"]가 되는 것이다.
+
+
+이번 문제도 정렬을 먼저 해주게 되면 for문을 두번 사용해주지 않아도 된다.
+
+**어떤 문자로 시작하는지 판별**
+
+    String st1, st2;
+    st1.startsWith(st2);
+
+st1문자열이 st2문자열로 시작하는지 확인하는 코드이다.
