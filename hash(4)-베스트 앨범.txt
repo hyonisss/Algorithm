@@ -1,0 +1,108 @@
+---
+title: 프로그래머스-Hash4(Java)
+date: 2020-02-28 21:47:29
+subtitle: 베스트 앨범
+tags: ["algorithm", "programmers", "java"]
+---
+## 프로그래머스 Hash(4)
+
+
+#### 베스트 앨범
+
+* * *
+<pre>
+<code>
+import java.util.*;
+class Solution {
+    public int[] solution(String[] genres, int[] plays) {
+        int[] answer = {};
+        
+        //장르 데이터 저장
+        HashMap<String, Integer> hash = new HashMap<String, Integer> ();
+        for(int i=0; i<genres.length; i++) { //장르별 재생수 합하기
+            if(hash.containsKey(genres[i])) { 
+                hash.put(genres[i], hash.get(genres[i])+plays[i]); //재생수 누적
+            }
+            else hash.put(genres[i], plays[i]); //처음 input되는 장르일 경우 0 세팅  
+        }
+
+        // 플레이 횟수 가장 많은 장르 구하기
+        answer = new int[hash.size()*2];
+
+  for(int j=0; !hash.isEmpty(); j += 2) {
+        String ans_genre = "";
+        int ans_num_genre = 0;
+
+        for(String key: hash.keySet()) {
+            if(hash.get(key)>ans_num_genre) {
+                ans_genre = key;
+                ans_num_genre = hash.get(key);
+
+            }
+        }
+      
+        
+      //재생수비교..
+    // 플레이수 가장 많은 장르안에서 많이 재생된 노래 찾기
+            int ans_num1_play = 0;
+            int ans_num2_play = 0;
+            int cnt = 0;
+        for(int i=0; i<genres.length; i++) {
+            if(genres[i].equals(ans_genre)) {
+                if(plays[i]>ans_num1_play) {  //재생수 가장 많은 장르 안에서 1등 가리기
+                    
+                    answer[j+1] = answer[j]; //우선 1등에 있던거 2등 넣어놓기
+                    answer[j] = i;  //1등 인덱스 저장
+                    ans_num2_play = ans_num1_play;
+                    ans_num1_play = plays[i];
+                     
+                }
+               
+                else if(plays[i]>ans_num2_play)  {  // 2등 가리기 
+                   answer[j+1] = i;
+                    ans_num2_play=plays[i];
+                } 
+            }
+        }
+        hash.remove(ans_genre);          
+  }
+        
+        return answer;
+    }
+}
+
+</code>
+</pre>
+
+* * *
+
+* 실수한 부분
+
+문자열이 같은지 아닌지 비교할 때는 **==** 사용하지 말고, 아래처럼 할 것!
+
+    str1.equals(st2);   
+ 
+ 
+ 
+* 해시 키 개수 구하는 함수
+
+중복 제외하고 integer 값을 리턴한다.
+
+    hash.size();   
+
+   
+
+* 해시 삭제
+
+데이터도 삭제하지만, 키 값도 동시에 삭제된다는 것은 새로 알았다.
+
+    hash.remove(키값);   
+
+   
+
+* * *
+
+아직 미완성   
+테스트 케이스 추가하면 오류가 난다
+
+**TO DO** : 큐랑 리스트 배우고 와서 다시 하기
