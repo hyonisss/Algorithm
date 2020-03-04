@@ -1,0 +1,79 @@
+---
+title: 프로그래머스-스택/큐2(Java)
+subtitle: 다리를 지나는 트럭
+date: 2020-03-01 20:08:01
+tags: ["algorithm", "programmers", "java"]
+---
+
+## 프로그래머스 스택/큐(2)
+
+#### 다리를 지나는 트럭
+
+* * *   
+      
+> 나의 풀이    
+      
+<pre>
+<code>
+import java.util.*;
+public class Truck {                //Truck이라는 Class 생성
+    int weight;
+    int distance;
+    public Truck(int weight, int distance) {
+        this.weight = weight;
+        this.distance = distance;
+    }
+}
+class Solution {
+    public int solution(int bridge_length, int weight, int[] truck_weights) {
+        int answer = 0;                     // Time
+        Truck truck = null;                 //Truck을 담을 임시 변수
+        int weightLeft = weight;        //남은 견딜 수 있는 무게
+        
+        Queue<Truck> wait = new LinkedList<Truck> (); 
+        List<Truck> inside = new ArrayList<Truck> ();
+        
+        for(int t : truck_weights) {
+            wait.add(new Truck(t, bridge_length));
+        }
+        
+        while(!(wait.isEmpty() && inside.isEmpty())) {
+            answer++;
+            if(!inside.isEmpty() && inside.get(0).distance<=0) { //다리 다 지난 트럭 빼내기
+            weightLeft += inside.get(0).weight; //빼낸만큼 남은 무게 증가
+                inside.remove(0);
+            }
+           if(!wait.isEmpty() && weightLeft - wait.peek().weight >= 0) { //대기중인 트럭 무게 체크 후 집어 넣기
+                weightLeft -= wait.peek().weight;
+                inside.add(wait.poll());
+            }
+            for(int i=0; i<inside.size(); i++) { //다리 위에 있는 트럭 distance 전부 1씩 감소
+                truck = inside.get(i);
+                truck.distance--;
+            }
+        }
+        return answer;
+    }
+}
+</code>
+</pre>   
+   
+     
+* * *   
+   
+   
+   
+> 알고리즘 해설
+
+* 대기중인 트럭 
+
+      Queue<Truck> wait = new LinkedList<Truck> (); 
+        
+
+        
+* 다리 위 트럭
+    
+      List<Truck> inside = new ArrayList<Truck> ();
+    
+순차적으로 남은 거리를 for문을 통해 감소시켜주기 위해 ArrayList 사용
+LinkedList를 사용할 수도 있지만, .get(i)연산을 할 때, ArrayList는 O(1), Linked List는 O(n)시간이 걸리므로 ArrayList를 사용.
