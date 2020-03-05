@@ -1,0 +1,72 @@
+---
+title: 프로그래머스-스택-큐3(Java)
+subtitle: 기능개발
+date: 2020-03-02 22:18:21
+tags: ["algorithm", "programmers", "java"]
+---
+## 프로그래머스 스택/큐(3)
+
+#### 기능개발
+
+* * *   
+      
+> 나의 풀이    
+      
+<pre>
+<code>
+import java.util.*;
+
+class Solution {
+    public int[] solution(int[] progresses, int[] speeds) {
+        
+        Queue<Integer> queue = new LinkedList<Integer> ();     // 배포 날짜를 담을 큐
+        List<Integer> ans = new ArrayList<Integer> ();                // 정답을 담아둘 ArrayList
+        for(int i=0; i<progresses.length; i++) {                              // 배포 날짜를 계산하는 for문
+            int temp = (100-progresses[i]) / speeds[i];
+             if((100-progresses[i]) % speeds[i] ==0) 
+                 queue.add(temp);                                       
+             else 
+                 queue.add(temp+1);
+        }
+        while(!queue.isEmpty()) {
+            if(queue.size()==1) {                                                      //큐에 1개만 남았을 경우  정답에 1 삽입  
+                ans.add(1);                                                        
+                queue.remove();
+            }
+            else {
+                int standard = queue.poll();               
+                int count = 0;                                                          // 몇개까지 같이 반환할 건지 계산하는 변수
+                while(standard >= queue.peek()) {                         // 자신보다 작은 배포시간이 몇개인지 계산
+                queue.poll();                                                           // 배포시간이 작은게 확인되면 제거
+                count++;
+                }
+                ans.add(1+count);                                                  // 기본 1에 반복된 횟수 더하기
+            }
+         } 
+        int[] answer = new int[ans.size()];                                   // ArrayList사이즈만큼 answer배열 초기화
+        for(int i=0; i<ans.size(); i++) {                                         // 배열에 넣기
+            answer[i] = ans.get(i);
+        }
+        return answer;
+     
+    }
+}
+</code>
+</pre>
+
+* * *   
+   
+      
+        
+   
+     
+* 실수했던 부분
+
+        if(queue.size()==1) {                                                      
+                   ans.add(1);                                                        
+                   queue.remove();
+               }
+
+이 코드를 삽입하지 않아서 Java.lang.NullPointerException 오류가 계속 났다
+큐에 1개의 요소만 남았을때 바로 다음 while 반복문으로 가게되면, Null이 되기 때문이다.
+
