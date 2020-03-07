@@ -1,9 +1,4 @@
----
-title: 프로그래머스-Hash4(Java)
-date: 2020-02-28 21:47:29
-subtitle: 베스트 앨범
-tags: ["algorithm", "programmers", "java"]
----
+
 ---
 title: 프로그래머스-힙1(Java)
 subtitle: 더 맵게
