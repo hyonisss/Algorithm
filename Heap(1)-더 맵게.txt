@@ -1,0 +1,125 @@
+---
+title: 프로그래머스-Hash4(Java)
+date: 2020-02-28 21:47:29
+subtitle: 베스트 앨범
+tags: ["algorithm", "programmers", "java"]
+---
+---
+title: 프로그래머스-힙1(Java)
+subtitle: 더 맵게
+date: 2020-03-07 17:53:59
+tags: ["algorithm", "programmers", "java"]
+---
+
+## 프로그래머스 힙(1)
+   
+
+#### 더 맵게   
+   
+      
+* * *
+   
+> 나의 풀이   
+   
+   
+<pre>
+<code>
+import java.util.*;
+class Solution {
+    public int solution(int[] scoville, int K) {
+        PriorityQueue<Integer> queue = new PriorityQueue<Integer> (); 
+        int num1, num2 = 0;
+        int mix_num = 0;
+        int answer = -1;
+        int cnt = 0;
+        for(int sco : scoville) {                   // 우선순위 큐에 다 삽입
+            queue.add(sco);                 
+        }
+        while(queue.size()>1) {                 // 마지막 하나 남을 때까지 반복
+         if(queue.peek() < K) {                  // 첫번째 요소(가장 작은 요소)가 K보다 작으면 섞는다
+             num1 = queue.poll();
+             num2 = queue.poll();
+             queue.add(num1 + num2*2);      
+             cnt++;                                         // cnt 1 증가
+         }
+         else{                                              // 첫번째 요소(가장 작은 요소)가 K보다 크면 반복문 나가기
+             answer = cnt;
+             break;
+         }
+        } 
+        if(queue.poll()>K)                              // 마지막 남은 원소 하나가 K보다 크면 성공한거니 횟수 출력
+            answer = cnt;                               
+        return answer;
+    }
+}
+</code>
+</pre>
+   
+* * *
+     
+* 우선순위 큐
+
+        PriorityQueue<Integer> queue = new PriorityQueue<Integer> (); 
+    
+우선순위 큐를 사용하면 힙(Heap)을 구현할 수 있음
+자동으로 오름차순으로 원소 정렬해서 저장됨
+    
+     
+* * *
+
+> 실패했던 코드 
+
+<pre>
+<code>
+import java.util.*;
+class Solution {
+    public int solution(int[] scoville, int K) {
+        PriorityQueue<Integer> queue = new PriorityQueue<Integer> ();
+        int num1, num2 = 0;
+        int mix_num = 0;
+         int answer = 0;
+        for(int sco : scoville) {
+            queue.add(sco);
+        }
+        while(true) {
+         if(queue.peek() < K) {
+             num1 = queue.poll();
+             num2 = queue.poll();
+             queue.add(num1 + num2*2);
+             answer++;
+         }
+         else break;
+        } 
+        return answer;
+    }
+}
+</code>
+</pre>
+
+* * *
+       
+
+   
+* 문제였던 부분   
+    
+   
+
+1. K지수 이상으로 만들 수 없을땐 -1을 반환하라고 했는데 그 부분을 반영안했음
+
+    그래서, answer = -1 로 초기화하고 cnt라는 변수를 따로 만들어서 새로 mix 할때마다 cnt++를 해줌
+    그리고 queue.poll()을 했을 때, 반환되는 수(큐에서 제일 작은 값)가 K이상이면 성공했으니 answer에 cnt를 넣어서 반환해줌
+   
+   
+   2. while(true)라고 한 것
+   
+   마지막까지 K이상인 요소가 안나오면 큐에는 요소 1개가 남게된다. 그러나 처음에 작성했던 코드에서는 요소가 1개임에도 불구하고 또 while 반복문을 돌게 된다. 그리고 마지막 남은 1개 마저 K보다 작을땐 if 조건문 안으로 들어가게 되는데, num1과 num2 둘다 뽑아낼 수가 없다.   
+   그래서 다음과 같이 수정했다
+   
+            while(queue.size()>1)
+   
+    그리고 밖에 if 절을 하나 더 추가해줬다
+
+            if(queue.poll()>K)                             
+            answer = cnt;          
+   
+   마지막 남은 원소가 K보다 크면 결국 K이상으로 만드는데 성공한 것이니, cnt를 answer에 넣어주는 것이다.
