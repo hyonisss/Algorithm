@@ -11,7 +11,7 @@ tags: ["algorithm", "programmers", "java"]
 * * *
 > 풀이1(내 풀이)
 <pre>
-<code>
+<code>  
 import java.util.*;
 class Solution {
     public int solution(String[][] clothes) {
