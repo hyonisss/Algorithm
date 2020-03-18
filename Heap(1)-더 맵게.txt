@@ -14,7 +14,7 @@ tags: ["algorithm", "programmers", "java"]
       
 * * *
    
-> 나의 풀이   
+> 나의 풀이 
    
    
 <pre>
