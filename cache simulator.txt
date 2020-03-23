@@ -1,0 +1,214 @@
+---
+title: cache simulator
+date: 2020-03-23 18:10:06
+tags:
+---
+## cache mechanism simulator
+
+#### Term Project on Implementation of Cache Mechanism
+
+---
+
+   
+      
+      
+-  Codes
+  
+  (1) Cache.c
+
+            #include <stdio.h>
+            /* include header file of <stdio.h> for Standard Input Output */
+            #include <string.h>
+            /* include header file of <string.h> */
+            #include "cache_impl.h"
+            /* include header file of "cache_impl.h"*/
+                /* to get the global variables in other files(extend visibility of variances) */
+             extern int num_cache_hits; /* extend the visibility of integer type variance
+             "num_cache_hits" */
+             extern int num_cache_misses; /* extend the visibility of integer type variance
+             "num_cache_misses" */
+             extern int num_bytes; /* extend the visibility of integer type variance "num_bytes" */
+             extern int num_access_cycles;  /* extend the visibility of integer type variance
+             "num_acess_cycles" */
+             extern int global_timestamp; /* extend the visibility of integer type variance
+             "global_timestamp" */
+             /* new variables used in this file */
+             cache_entry_t cache_array[CACHE_SET_SIZE][DEFAULT_CACHE_ASSOC];
+             /* data in cache with size (# of sets X # of associations) : 4x1 for direct, 2x2 for 2-way,
+             1x4 for fully */
+             int memory_array[DEFAULT_MEMORY_SIZE_WORD];
+             /* data in memory with size of 128 words */
+            /* DO NOT CHANGE THE FOLLOWING FUNCTION */
+            /* This function is to initialize contents of the main memory */
+            void init_memory_content() {
+            unsigned char sample_upward[16] = {0x001, 0x012, 0x023, 0x034, 0x045, 0x056, 0x067,
+            0x078, 0x089, 0x09a, 0x0ab, 0x0bc, 0x0cd, 0x0de, 0x0ef};
+            unsigned char sample_downward[16] = {0x0fe, 0x0ed, 0x0dc, 0x0cb, 0x0ba, 0x0a9, 0x098,
+            0x087, 0x076, 0x065, 0x054, 0x043, 0x032, 0x021, 0x010};
+            int index, i=0, j=1, gap = 1;
+            for (index=0; index < DEFAULT_MEMORY_SIZE_WORD; index++) {
+            memory_array[index] = (sample_upward[i] << 24) | (sample_upward[j] << 16) |
+             (sample_downward[i] << 8) | (sample_downward[j]);
+             if (++i >= 16) // cycle
+             i = 0;
+             if (++j >= 16) // cycle
+             j = 0;
+              if (i == 0 && j == i+gap) //difference of i and j == gap
+             j = i + (++gap); // increases 1 gap and new j for each cycle
+              }
+            printf("mem[%d] = %#x\n", index, memory_array[index]);
+              }
+             /* DO NOT CHANGE THE FOLLOWING FUNCTION */
+             /* This function is to initialize contents of the cache memory */
+             void init_cache_content() {
+             int i, j;
+             /* initialize cache data */
+             for (i=0; i<CACHE_SET_SIZE; i++) {
+             for (j=0; j < DEFAULT_CACHE_ASSOC; j++) {
+             cache_entry_t *pEntry = &cache_array[i][j];
+             pEntry->valid = 0; //invalid
+             pEntry->tag = -1; //no tag
+             pEntry->timestamp = 0; // no access trial
+             }
+             }
+             }
+             /* DO NOT CHANGE THE FOLLOWING FUNCTION */
+             /* This function is a utility function to print all the cache entries. It will be useful
+             for your debugging */
+             void print_cache_entries() {
+             int i, j, k;
+             //for each set
+             for (i=0; i<CACHE_SET_SIZE; i++) {
+             printf("\n[Set %d] ", i);
+             // for each entry in a set
+             for (j=0; j <DEFAULT_CACHE_ASSOC; j++) {
+             cache_entry_t *pEntry = &cache_array[i][j];
+             printf("V: %d Tag: %#x Time: %d Data: ", pEntry->valid, pEntry->tag, pEntry-
+             >timestamp);
+             //for each block in a entry
+             for (k=0; k<DEFAULT_CACHE_BLOCK_SIZE_BYTE; k++) {
+             }
+            printf("%#x(%d) ", pEntry->data[k], k);
+              printf("\t");
+             }
+             printf("\n");
+             }
+             }
+             /* This function is to return the data in cache */
+             int check_cache_data_hit(void *addr, char type) {
+             int tag,set; /* integer variabe 'tag' and 'set' is decalred */
+             unsigned long int byteAddress = (unsigned long int)addr; /* addr type converses void
+
+             type into unsigned long integer type */
+             int blockAddress = byteAddress / DEFAULT_CACHE_BLOCK_SIZE_BYTE; /* byteAddress divided
+             by DEFAULT_CACHE_BLOCK_SIZE_BYTE(8) is assigned to blockAddress */
+             tag = blockAddress / CACHE_SET_SIZE; /* blockAddress divided by CACHE_SET_SIZE is
+             assigned to 'tag' variable which represents "which block" */
+             set= blockAddress % CACHE_SET_SIZE; /* block address modulo CACHE_SET_SIZE is assigned
+             to 'set' variable */
+             num_access_cycles +=CACHE_ACCESS_CYCLE; //add this cache access cycle to global
+             access cycle
+             for (int i = 0; i < DEFAULT_CACHE_ASSOC; i++) { /* check all entries in set , Direct
+             for 1 time, 2-way for 2 times, fully for 4 times */
+             if (((cache_array[set][i].valid) == 1) && (tag == cache_array[set][i].tag))
+             { /* if valid bit is present and tag is same, hit */
+             num_cache_hits++; /* increment num_cache_hits */
+             cache_array[set][i].timestamp = global_timestamp; /* update timestamp
+             of this entry by same amount of global_timestamp to record most recent access */
+             if (type == 'b') // if type is byte(1 byte)
+             return
+             *(&cache_array[set][i].data[byteAddress%DEFAULT_CACHE_BLOCK_SIZE_BYTE]); // return
+             cache_array[byte_offset] with byte type(1 byte)
+             else if (type == 'h') // if type is halfword(2 bytes)
+             cache_array[byte_offset] with halfword type(2 bytes)
+            return *((short
+             *)&cache_array[set][i].data[byteAddress%DEFAULT_CACHE_BLOCK_SIZE_BYTE]); // return
+              else if (type == 'w') // if type is word(4 bytes)
+             return *((int
+             *)&cache_array[set][i].data[byteAddress%DEFAULT_CACHE_BLOCK_SIZE_BYTE]); // // return
+             cache_array[byte_offset] with wprd type(4 bytes)
+             }
+            }
+            //return cache_array[set][i].data;/* Return the data */
+               /* If there is no data in cache, data is missed and return -1 */
+             num_cache_misses++; /* increment num_cache_misses by 1 */
+             return -1; /* return -1 for cache miss */
+             }
+             int find_entry_index_in_set(int cache_index) { //fint the entry of the useable cache
+             int entry_index; //cache entry index
+             /* Check if there exists any empty cache space by checking 'valid' */
+             for (int i = 0; i < DEFAULT_CACHE_ASSOC; i++) { //find cache entry index from
+             begininng to end
+             if (cache_array[cache_index][i].valid == 0) { //if
+             cache_array[cache_index][i].valid == 0, it can be used
+             entry_index = i; // store i in entry_index
+             return entry_index; //return the value of entry_index
+             }//if end
+             }//for end
+             /* Otherwise, search over all entries to find the least recently used entry by
+             checking 'timestamp' */
+
+             if (DEFAULT_CACHE_ASSOC == 1) //"DEFAULT_CACHE_ASSOC == 1" means it is direct mapped
+             cache
+             return 0; //return 0
+             int checkTimestamp = cache_array[0][0].timestamp; //checkTimestamp is LRU and
+             initialize checkTimestamp to the first of cache timestamp
+             for (int j = 0; j < DEFAULT_CACHE_ASSOC; j++) { //check what cache timestamp is the
+             smallest value
+             if (checkTimestamp > cache_array[cache_index][j].timestamp) //if
+             checkTimestamp value is larger than cache_array[cache_index][j].timestamp
+             checkTimestamp = cache_array[cache_index][j].timestamp; //store
+             cache_array[cache_index][j].timestamp in checkTimestamp
+             }//for end
+             for (int i = 0; i < DEFAULT_CACHE_ASSOC; i++) {//check that checkTimestamp is same the
+             cache_array[cache_index][i].timestamp
+             if (checkTimestamp == cache_array[cache_index][i].timestamp) { // if
+             checkTimestamp is equal to the cache_array[cache_index][i].timestamp
+             entry_index = i;// store i in entry_index
+             }//if end
+             }//for loop end
+            return entry_index; //return the value of entry_index
+            }
+               int access_memory(void *addr, char type) { // access memory for search the data
+             *addr: addr is byte address, whereas your main memory address is word address due to 'int
+            /* void
+              memory_array[]' */
+             unsigned long int byteAddress = (unsigned long int)addr; //addr type converses void
+             type into unsigned long int type
+             int blockAddress = byteAddress / DEFAULT_CACHE_BLOCK_SIZE_BYTE;// get the value of
+             blockAddress(blockAddress is byteAddress / DEFAULT_CACHE_BLOCK_SIZE_BYTE)
+             int tag = blockAddress / CACHE_SET_SIZE;// get the value of the tag(tag is
+             blockAddress / CACHE_SET_SIZE)
+             int set = blockAddress % CACHE_SET_SIZE; // get the value of the set(set is
+             blockAddress % CACHE_SET_SIZE)
+              /* You need to invoke find_entry_index_in_set() for copying to the cache */
+             int index = find_entry_index_in_set(set); //get the entry index by invoking
+             find_entry_index_in_set() for copying to the cache
+             num_access_cycles += MEMORY_ACCESS_CYCLE; //update num_access_cycles by adding
+             MEMORY_ACCESS_CYCLE
+              /* Fetch the data from the main memory and copy them to the cache */
+             memcpy(cache_array[set][index].data,
+             &memory_array[(blockAddress*DEFAULT_CACHE_BLOCK_SIZE_BYTE) / WORD_SIZE_BYTE],
+             DEFAULT_CACHE_BLOCK_SIZE_BYTE);
+
+            // copy from memory_array[(blockAddress*DEFAULT_CACHE_BLOCK_SIZE_BYTE) /
+            WORD_SIZE_BYTE] to cache_array[set][index].data by WORD_SIZE_BYTE
+            cache_array[set][index].valid = 1; // update cache_array[set][index].valid to 1
+            cache_array[set][index].tag = tag; //update cache_array[set][index].tag
+            cache_array[set][index].timestamp = global_timestamp; // store global_timestamp into
+            cache_array[set][index].timestamp
+            return
+            /* Return the accessed data with a suitable type */
+            if (type == 'b')  //if type is 'b'
+            *(&cache_array[set][index].data[byteAddress%DEFAULT_CACHE_BLOCK_SIZE_BYTE]); //read as
+            much as 1byte in cache_array[set][index].data[byteAddress%DEFAULT_CACHE_BLOCK_SIZE_BYTE]
+            else if (type == 'h')//if type is 'h'
+            return   *((short
+            *)&cache_array[set][index].data[byteAddress%DEFAULT_CACHE_BLOCK_SIZE_BYTE]); //read as
+            much as 2bytes in cache_array[set][index].data[byteAddress%DEFAULT_CACHE_BLOCK_SIZE_BYTE]
+            else if (type == 'w')//if type is 'w'
+            return *((int
+            *)&cache_array[set][index].data[byteAddress%DEFAULT_CACHE_BLOCK_SIZE_BYTE]); //read as
+            much as 4bytes in cache_array[set][index].data[byteAddress%DEFAULT_CACHE_BLOCK_SIZE_BYTE]
+            return -1; // Cannot find a suitable type error
+            }
