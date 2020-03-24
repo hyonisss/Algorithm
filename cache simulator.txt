@@ -212,3 +212,85 @@ tags:
             much as 4bytes in cache_array[set][index].data[byteAddress%DEFAULT_CACHE_BLOCK_SIZE_BYTE]
             return -1; // Cannot find a suitable type error
             }
+(2) main.c
+*
+*
+*
+*/
+  /*
+ * main.c
+  * 20493-02 Computer Architecture
+ * Term Project on Implentation of Cache Mechanism
+  * Skeleton Code Prepared by Prof. HyungJune Lee
+ * Nov 13, 2017
+  #include <stdio.h>       //include 'Standard Input/Output library'
+ #include "cache_impl.h" // include the 'cache_impl header file'
+ #pragma warning(disable :4996)   //compiler warning
+ int num_cache_hits = 0; //# of hits
+ int num_cache_misses = 0; //# of misses
+ int num_bytes = 0;   //# of accessed bytes
+ int num_access_cycles = 0; // # of clock cyclesint global_timestamp = 0; //# of data access trials
+ int retrieve_data(void *addr, char data_type) { //acces the data of cache and memory
+ int value_returned = -1; /* accessed data */
+ value_returned = check_cache_data_hit(addr, data_type);//try to access the cache to
+ check whetehr the data is available
+  /* In case of the cache miss event, access the main memory by
+ invoking access_memory() */
+ if (value_returned == -1) {//if  value_returned == -1
+ value_returned = access_memory(addr, data_type); //get access value by
+ invoking retreived_data()
+ }//if end
+ return value_returned;   // return the value of the  value_returned
+ }//retriece_data() end
+ int main(void) { //start function
+ FILE *ifp = NULL, *ofp = NULL; // file pointer
+ unsigned long int access_addr; /* byte address (located at 1st column) in
+ "access_input.txt" */
+ char access_type; /* 'b'(byte), 'h'(halfword), or 'w'(word) (located at 2nd column) in
+ "access_input.txt" */
+ int accessed_data; /* This is the data that you want to retrieve first from cache, and
+ then from memory */
+ init_memory_content(); //initialize memory by invoking init_memory_content()
+ init_cache_content();//initialize cache by invoking init_cache_content()
+ ifp = fopen("access_input.txt", "r"); // file open
+ if (ifp == NULL) {// if file is empty
+ printf("Can't open input file\n"); //print error message
+ return -1; // return -1 :error
+ }
+}
+ ofp = fopen("access_output_01.txt", "w");//file open
+ if (ofp == NULL) {// if file is empty
+ printf("Can't open output file\n");//print error message
+ fclose(ifp);//close ifp pointer
+ return -1; //return -1 : error
+  fprintf(ofp, "[Accessed Data]\n");//print "[Accessed Data]\n"
+ by invoking retrieve_data() */
+while (fscanf(ifp, "%lu %c", &access_addr, &access_type) != EOF) { //read line until
+/* Fill out here
+   end of file
+ accessed_data = retrieve_data((void *)access_addr, access_type);//for each
+ data, get accessed_data by invoking retreived_data()
+ global_timestamp++; //update global_timestamp by one
+ if (access_type == 'b') //if access_type == 'b'
+ num_bytes += 1;      //plus one to the num_bytes
+ else if (access_type == 'h') //if access_type == 'h'
+ num_bytes += 2;      //plus one to the num_bytes
+ else if (access_type == 'w') //if access_type == 'w'
+ num_bytes += 4;      //plus one to the num_bytes
+ fprintf(ofp, "%lu \t %c \t %#x\n", access_addr, access_type, accessed_data);
+
+ //print all values of the access_addr, access_type, accessed_data to the output.txt
+ }//finish while block
+ float hitratio = ((float)num_cache_hits / (num_cache_hits + num_cache_misses));//the
+ result value of hit ratio
+ float bandwidth = (float)num_bytes / num_access_cycles; //the result value of
+ bandwidthfprintf(ofp, "-------------------------------------------------\n");//print line tothe output.txtif (DEFAULT_CACHE_ASSOC == 1) //if DEFAULT_CACHE_ASSOC == 1(Direct)fprintf(ofp, "[Direct mapped cache performance]\n");//print the line "[Directmapped cache performance]\n" to the output.txtelse if (DEFAULT_CACHE_ASSOC == 2)//if DEFAULT_CACHE_ASSOC == 2(2-way)fprintf(ofp, "[2-way set associative cache performance]\n");// print the line"[2-way set associative cache performance]\n" to the output.txtelse if (DEFAULT_CACHE_ASSOC == 4)//if DEFAULT_CACHE_ASSOC == 4(Fully)fprintf(ofp, "[Fully associative cache performance]\n");// print the line"[Fully associative cache performance]\n" to the output.txt
+ fprintf(ofp, "Hit ratio = %.2f (%d/%d)\n", hitratio, num_cache_hits, num_cache_hits +
+ num_cache_misses); //print to the output.txt for hit ratio
+ fprintf(ofp, "bandwidth = %.2f (%d/%d)\n", bandwidth, num_bytes,
+ num_access_cycles);//print to the output.txt for bandwidth
+ fclose(ifp);//close ifp pointer
+fclose(ofp);//close ofp pointer
+ print_cache_entries(); //print all of the cache entries
+ return 0; //program end
+ 
