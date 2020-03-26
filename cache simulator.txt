@@ -214,16 +214,7 @@ tags:
             }
 (2) main.c
 *
-*
-*
-*/
-  /*
- * main.c
-  * 20493-02 Computer Architecture
- * Term Project on Implentation of Cache Mechanism
-  * Skeleton Code Prepared by Prof. HyungJune Lee
- * Nov 13, 2017
-  #include <stdio.h>       //include 'Standard Input/Output library'
+* #include <stdio.h>       //include 'Standard Input/Output library'
  #include "cache_impl.h" // include the 'cache_impl header file'
  #pragma warning(disable :4996)   //compiler warning
  int num_cache_hits = 0; //# of hits
