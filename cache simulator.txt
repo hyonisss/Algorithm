@@ -11,7 +11,6 @@ tags:
 
    
       
-      
 -  Codes
   
   (1) Cache.c
@@ -263,7 +262,7 @@ while (fscanf(ifp, "%lu %c", &access_addr, &access_type) != EOF) { //read line u
  data, get accessed_data by invoking retreived_data()
  global_timestamp++; //update global_timestamp by one
  if (access_type == 'b') //if access_type == 'b'
- num_bytes += 1;      //plus one to the num_bytes
+ num_bytes += 1;      //plus 1 to the num_bytes
  else if (access_type == 'h') //if access_type == 'h'
  num_bytes += 2;      //plus one to the num_bytes
  else if (access_type == 'w') //if access_type == 'w'
