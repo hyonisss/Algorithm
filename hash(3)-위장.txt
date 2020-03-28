@@ -35,6 +35,33 @@ class Solution {
 </code>
 </pre>
 
+---
+> 풀이 2 (다른 사람 풀이)
+public int solution(String[][] clothes) {
+    HashMap<String, Integer> categories = categorizeClothes(clothes);
+
+    int answer = 1;
+    for (Integer value : categories.values())
+        answer *= (value + 1);
+
+    answer -= 1;
+
+    return answer;
+}
+private HashMap<String, Integer> categorizeClothes(String[][] clothes) {
+    HashMap<String, Integer> categories = new HashMap<>();
+
+    for (int i = 0; i < clothes.length; i++) {
+        String categoryName = clothes[i][1];
+        if (categories.containsKey(categoryName))
+            categories.replace(categoryName, categories.get(categoryName) + 1);
+        else
+            categories.put(categoryName, 1);
+    }
+    return categories;
+}
+
+
 * * *
 
 **문제 풀이**
