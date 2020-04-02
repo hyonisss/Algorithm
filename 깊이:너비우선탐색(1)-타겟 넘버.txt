@@ -1,0 +1,51 @@
+
+---
+title: 프로그래머스-깊이너비우선탐색(1)(Java)
+date: 2020-04-02 16:45:28
+tags:
+---
+
+
+## 프로그래머스 깊이/너비 우선탐색(1)
+
+#### 타겟 넘버
+
+* * *   
+   
+> 나의 풀이 (dfx 사용)   
+   
+   <pre>
+   <code>
+   import java.util.*;
+   class Solution {
+       static int answer =0; // 타겟넘버가 나오는 case 갯수 세기
+       public int solution(int[] numbers, int target) {        
+           dfs(numbers, target, 0); 
+           return answer;
+       }
+       public void dfs(int[] numbers, int target, int k) {
+           if(k==numbers.length) { // 깊이 끝까지 탐색했을때
+               int sum = 0; 
+               for(int i=0; i<numbers.length; i++) {
+                   sum += numbers[i]; // 배열 안에 저장된 수를 모두 더하기
+               }
+               if(sum == target) // target수랑 합이 일치하면
+               answer++; // answer 1 증가
+               return;
+           }
+           else { 
+               numbers[k] *= 1; // '+'는 왼쪽 자식 노드로 내려가는 재귀메소드
+               dfs(numbers, target, k+1);
+               numbers[k] *= -1; // '-'는 오른쪽 자식 노드로 내려가는 재귀메소드
+               dfs(numbers, target, k+1);
+           }
+       }
+   }
+</code>
+</pre>   
+   
+* 깊이 우선탐색 사용
+
+연산과정을 하나의 트리로 생각해 볼때,    
+'+' 연산은 왼쪽 자식노드로   
+'-' 연산은 오른쪽 자식노드로 내려가는 재귀메소드를 이용한다
