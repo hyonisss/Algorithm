@@ -12,7 +12,7 @@ tags: ["java", "programmers"]
 
 * * *   
    
-> 나의 풀이 (dfx 사용)   
+> 나의 처음 실패한 풀이 (dfx 사용)   
    
   import java.util.*;
 class Solution {
@@ -45,5 +45,42 @@ class Solution {
         answer = dfs(begin, words[num], words, num);
         
         return answer;
+    }
+}
+   
+> 다시 해본 정답 풀이
+
+import java.util.*;
+class Solution {
+    static int minConversion = 0; //최소 방문 횟수
+    boolean diffOneChar(String str1, String str2) {
+        int cnt = 0; // 글자 다른거 개수 세는 변수
+        for(int i =0 ; i< str1.length() ; i++) {
+            if(str1.charAt(i)!= str2.charAt(i)) {
+                cnt++; 
+                if(cnt>1) break;
+            }
+        }
+        if(cnt == 1) return true;
+        else return false;
+    }
+    void dfs(String begin, String target, String[] words,int conversion, boolean[] visited) {
+        if(begin.equals(target)) minConversion = (minConversion == 0) ? conversion : Math.min(minConversion, conversion);
+        for(int i = 0; i<words.length; i++) {
+            
+            if(!visited[i] && diffOneChar(begin, words[i])) {
+                visited[i] = true;
+                dfs(words[i], target, words, conversion+1, visited);
+                visited[i] = false;
+            }                             
+        }
+        
+    }
+
+
+    public int solution(String begin, String target, String[] words) {
+        boolean visited[] = new boolean[words.length]; //중복 방문 예방
+        dfs(begin, target, words, 0, visited);        
+        return minConversion;
     }
 }
