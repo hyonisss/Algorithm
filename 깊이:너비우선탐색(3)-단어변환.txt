@@ -48,7 +48,7 @@ class Solution {
     }
 }
    
-> 다시 해본 정답 풀이
+> 12시간 고민 끝에 완성한 정답 풀이
 
 import java.util.*;
 class Solution {
