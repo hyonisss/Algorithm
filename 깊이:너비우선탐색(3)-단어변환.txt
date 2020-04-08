@@ -50,6 +50,8 @@ class Solution {
    
 > 12시간 고민 끝에 완성한 정답 풀이
 
+<pre>
+<code>
 import java.util.*;
 class Solution {
     static int minConversion = 0; //최소 방문 횟수
@@ -84,3 +86,5 @@ class Solution {
         return minConversion;
     }
 }
+</code>
+</pre>
