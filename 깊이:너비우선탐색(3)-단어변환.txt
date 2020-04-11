@@ -20,7 +20,7 @@ class Solution {
     public int dfs(String begin, String target, String[] words,int k) {
         int cnt = 0; // 글자 다른거 개수 세는 변수
          for(int i =0 ; i< begin.length() ; i++) {
-            if(begin.charAt(i)!= target.charAt(i)) {
+            if(begin.charAt(i)!= target.charAt(i)) {   //한글자만 다르면
                 cnt++;
             }
         }
@@ -89,4 +89,13 @@ class Solution {
     }
 }
 </code>
-</pre>
+</pre>   
+   
+   
+* * *
+
+* 중복 방문 예방 코드
+
+        boolean visited[] = new boolean[words.length]; 
+   
+한번 사용됐던 words 는 다시 한 번 더 검사하지 않기 위해
