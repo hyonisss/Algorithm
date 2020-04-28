@@ -47,14 +47,16 @@ BFS를 활용하여 문제를 풀었다.
 > 나의 코드
 #include <vector>
 #include<queue>
-using namespace std;
+using namespace std; //c
+
 
 int solution(int n, vector<vector<int>> edge) {
 	int answer = 0, Max = 0;
 	queue<int> q;
 	vector<int> visit(n + 1, 0);
 	vector<vector<int>> g(n + 1, vector<int>());
-	for (int i = 0; i < edge.size(); i++) {
+	for (int i = 0; i < edge.size(); i++) { //search
+
 		int u = edge[i][0], v = edge[i][1];
 		g[u].push_back(v);
 		g[v].push_back(u);
@@ -65,7 +67,7 @@ int solution(int n, vector<vector<int>> edge) {
 		int cur = q.front();
 		q.pop();
 		for (int i = 0; i < g[cur].size(); i++) {
-			int next = g[cur][i];
+			int next = r][i];
 			if (!visit[next] && next != 0) {
 				visit[next] = visit[cur] + 1;
 				q.push(next);
