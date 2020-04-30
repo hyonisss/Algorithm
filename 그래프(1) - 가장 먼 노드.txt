@@ -79,4 +79,4 @@ int solution(int n, vector<vector<int>> edge) {
 		if (Max == visit[i])answer++;
 	return answer;
 }
-
+---
