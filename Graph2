@@ -18,3 +18,4 @@ import java.util.*;
 
 public class Graph2(int graphs[]) {
  
+ class
