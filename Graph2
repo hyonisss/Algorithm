@@ -20,6 +20,6 @@ public class Graph2(int graphs[]) {
  private int a = 1;
  int graph = 0;
  class {
- dd
+ 
  return 0;
  }
