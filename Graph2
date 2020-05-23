@@ -23,3 +23,6 @@ public class Graph2(int graphs[]) {
  
  return 0;
  }
+ 
+ 완전탐색 / 프로그램
+ 
