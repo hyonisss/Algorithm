@@ -1,0 +1,35 @@
+
+---
+title: 프로그래머스-정렬1(Java)
+subtitle: K번째 수
+date: 2020-03-07 17:53:59
+tags: ["algorithm", "programmers", "java"]
+---
+
+## 프로그래머스 정렬(1)
+   
+
+#### K번째 수
+   
+      
+* * *
+   
+> 나의 풀이 
+   
+  import java.util.*;
+
+class Solution {
+    public int[] solution(int[] array, int[][] commands) {
+        int[] answer = new int[commands.length];
+        for(int i=0; i<commands.length; i++) {
+            int[] temp = new int[commands[i][1]-commands[i][0]+1];
+            for(int j=commands[i][0]-1, cnt=0; j<commands[i][1]; j++, cnt++) {
+                temp[cnt] = array[j];
+            }
+            Arrays.sort(temp);
+            answer[i] = temp[commands[i][2]-1];
+        }
+        
+        return answer;
+    }
+}
