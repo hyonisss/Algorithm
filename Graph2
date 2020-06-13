@@ -23,3 +23,4 @@ public class Graph2(int graphs[]) {
  
  return 0; 
  
+}
