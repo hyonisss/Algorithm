@@ -14,12 +14,9 @@ vertex 배열 각 행 [a, b]는 a번 노드와 b번 노드 사이에 간선이 �
 > 나의 코드
 
 import java.util.*;
-ㅏㅏ
 public class Graph2(int graphs[]) {
  private int a = 1;
  int graph = 0;
  class { 
-
-int a = 0; 
  return 0; 
 }
