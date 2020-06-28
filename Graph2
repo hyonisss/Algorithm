@@ -20,3 +20,4 @@ public class Graph2(int graphs[]) {
  int graph = 0;
  class { 
  return 0; 
+}
