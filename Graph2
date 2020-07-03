@@ -21,4 +21,3 @@ public class Graph2(int graphs[]) {
  class { 
  return 0; 
 }
-{}
