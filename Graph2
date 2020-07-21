@@ -19,4 +19,4 @@ public classh Graph2(int graphs[]) {
  private int a = 1;
  int graph = 0;
  return 0;
-}
+}ㄴㄴㄴ
