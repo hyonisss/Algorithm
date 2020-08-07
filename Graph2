@@ -15,6 +15,7 @@ vertex 배열 각 행 [a, b]는 a번 노드와 b번 노드 사이에 간선이 �
 
 public classh Graph2(int graphs[]) {
  private int a = 1;
+ 
  public int b = 2;
  int graph = 0;
  return 0;  
