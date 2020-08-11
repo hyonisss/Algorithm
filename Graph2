@@ -20,6 +20,7 @@ public classh Graph2(int graphs[]) {
  int graph = 0;
  return 0;  
 }
+\
 
 
 
