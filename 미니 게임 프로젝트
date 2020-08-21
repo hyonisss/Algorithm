@@ -1,0 +1,18 @@
+RGB_Clr_Screen(BLACK)
+RGB_Put_Pixel(x,y,GREEN)
+
+Timer3_Period = 200
+Timer3_Flag_on = 0 : Timer3_Period ms 이후 1 로 바뀜
+TIM3_Start()
+
+Buzzer_Beep(C2,N4)
+
+TIM_Delay_ms(500)
+IMG_Num_Disp_2digit(0,0,score,GREEN,BLACK)
+
+Uart2_Printf("Street Frog!\n")
+
+key = JOYSTICK_Get_Joystick_Pressed: 아무것도 안누르면 0
+
+srand(time());
+rand();
