@@ -1,0 +1,25 @@
+[입력예시]
+제품명 : 삼성 노트북9 Lite
+프로세서 : Intel Core i5
+HDD : 128
+ODD 유무(y/n) : n
+디스플레이 : 33.7
+[출력예시]
+ 
+char name[100];
+	char processor[100];
+	int hdd;
+	char odd;
+	float dis;
+	printf("제품명 : ");
+	gets(name);
+	printf("프로세서 : ");
+	gets(processor);
+	printf("HDD : ");
+	scanf_s("%d", &hdd);
+	printf("ODD 유무(y/n) : ");
+
+------------------------------------------------
+
+scanf를 쓰면 공백을 받을 수 없음.
+gets를 써야함
