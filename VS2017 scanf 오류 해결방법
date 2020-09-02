@@ -1,0 +1,9 @@
+계속 scanf 사용시 다음과 같은 오류 발생.
+
+심각도	코드	설명	프로젝트	파일	줄	비표시 오류(Suppression) 상태
+오류	C4996	'scanf': This function or variable may be unsafe. Consider using scanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.	ConsoleApplication6	c:\users\user\source\repos\consoleapplication6\consoleapplication6\practice.c	6	
+
+
+[해결방안]
+
+프로젝트 -> 오른쪽 마우스 클릭 -> 속성 -> 전처리기 -> _CRT_SECURE_NO_WARNINGS 추가
