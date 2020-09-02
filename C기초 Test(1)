@@ -52,7 +52,7 @@ void main(void)
 }
 
 
-2.
+2. 정수 n까지 소수의 합 구하기
 #include<stdio.h>
 int Sum_Sosu(int n)
 {
