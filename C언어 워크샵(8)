@@ -1,0 +1,199 @@
+[ 7-2. 이차원 배열 ]
+
+1.	배열에서 최소값과 최대값을 찾아 인쇄하시오.
+[문제 설명] 1개의 정수 n을 입력 받아 n행 n열 배열에 rand함수를 이용하여 임의의 랜덤 값을 저장한다. 그리고 배열에서 최소값과 최대값을 찾아 인쇄하시오.
+[입력] 1개의 정수 n을 입력 받는다. (1< n <=10)
+[출력] 최소값과 최대값을 순서대로 인쇄한다.
+[입력 예시] 5
+[출력 예시] 41 32391
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+int a[10][10];
+void main(void) {
+	srand(time(0));
+	int n, min, max, tmp;
+	scanf("%d", &n);
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			a[i][j] = rand();
+		}
+	}
+	min = max = a[0][0];
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			if (min > a[i][j]) {
+				min = a[i][j];
+			}
+			if (max < a[i][j]) {
+				max = a[i][j];
+			}
+		}
+		
+	}
+	printf("%d %d", min, max);
+}
+2.	배열에 일련번호를 저장하여 인쇄하시오
+[문제 설명] 1개의 정수 n을 입력 받아 n행 n열 배열에 1부터 순서대로 저장한다. 단 배열 끝에서부터 채운다.
+[입력] 1개의 정수 n을 입력 받는다. (1< n <=10)
+[출력] n*n배열에 저장된 정수를 인쇄한다.
+[입력 예시] 3
+[출력 예시] 
+9 8 7
+6 5 4
+3 2 1	[입력 예시] 5
+[출력 예시] 
+25 24 23 22 21
+20 19 18 17 16
+15 14 13 12 11
+10 9 8 7 6
+5 4 3 2 1
+#include <stdio.h>
+int a[10][10];
+void main(void) {
+	int n, num;
+	scanf("%d", &n);
+	num = n * n;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			a[i][j] = num--;
+		}
+	}
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			printf("%d ", a[i][j]);
+		}
+		printf("\n");
+	}
+}
+3.	배열에 정수를 삼각형 모양으로 저장하여 인쇄하시오.
+[문제 설명] 입력 받은 정수 n줄 만큼 삼각형 모양으로 1부터 순서대로 저장하여 인쇄한다. ( 2<n<=10)
+[입력 예시]
+5
+[출력 예시]
+              1
+           2  3  4
+        5  6  7  8  9
+    10 11 12 13 14 15 16
+ 17 18 19 20 21 22 23 24 25	[입력 예시]
+7
+[출력 예시]
+                    1
+                 2  3  4
+              5  6  7  8  9
+          10 11 12 13 14 15 16
+       17 18 19 20 21 22 23 24 25
+    26 27 28 29 30 31 32 33 34 35 36
+ 37 38 39 40 41 42 43 44 45 46 47 48 49
+#include <stdio.h>
+int a[10][19];
+void main(void) {
+	int n, cnt, num=1;
+	scanf("%d", &n);
+	for (int i = 0; i < 10; i++) {
+		for (int j = 9 - i, cnt = 0; cnt < 2 * i +1; j++, cnt++) {
+			a[i][j] = num++;
+		}
+	}
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < 19; j++) {
+			if (a[i][j] == 0) printf("   ");
+			else printf("%3d", a[i][j]);
+		}
+		printf("\n");
+	}
+}
+4.	3*3배열에서 행과 열 단위의 합계와 대각선의 합계를 구하시오.
+[문제 설명] 1줄에 정수 3개씩 3줄에 걸쳐 입력 받아 배열에 저장한다. 행과 열 단위의 합계와 왼방향, 오른방향 대각선의 합계를 구하여 인쇄한다. 
+[입력 예시]
+4 3 1    
+7 8 6   
+9 5 2   	[출력 예시]
+4    3    1    8
+7    8    6   21
+9    5    2   16
+20   16   9   45
+18 14
+
+#include <stdio.h>
+int a[3][3];
+int row[3];
+int col[3];
+int cross1, cross2;
+int sum;
+void main(void) {
+	int n;
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			scanf("%d", &n);
+			a[i][j] = n;
+		}
+	}
+
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			row[i] += a[i][j];
+			col[j] += a[i][j];
+			sum += a[i][j];
+		}
+	}
+	cross1 = a[0][0] + a[1][1] + a[2][2];
+	cross2 = a[0][2] + a[1][1] + a[2][0];
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			printf("%3d ", a[i][j]);
+			
+		}
+		printf("%3d", row[i]);
+		printf("\n");
+	}
+	printf("%3d %3d %3d %3d\n", col[0], col[1], col[2], sum);
+	printf("%d %d", cross2, cross1);
+}
+[8-1. 구조체]
+
+1.	개인 신상 정보를 구조체로 설계하여 인쇄와 수정하는 코드를 구현하시오. 
+
+(1) 다음의 구조체 멤버로 구성된 struct st_info 구조체 형틀을 선언하시오. 단 멤버별 타입과 이름은 자율적으로 정한다.
+구조체 멤버: 사번(id), 이름(name), 나이(age), 연락처(tel)
+struct st_info {
+	int id;
+	char name[15];
+	int age;
+	char tel[20];
+}x;
+(2) st_info타입의 구조체변수 info에 개인정보 데이터를 초기화하여 선언하시오.
+struct st_info {
+	int id;
+	char name[15];
+	int age;
+	char tel[20];
+}x = { 1, "Kim", 25, "010-1234-5678" };
+
+(3) 구조체변수 info의 내용을 다음과 같이 인쇄하시오.
+[출력 예시]
+ 
+	printf("사번    이름    나이    연락처\n");
+	printf("%d       %s     %d      %s\n", x.id, x.name, x.age, x.tel);
+ [9-2. 공용체]
+
+2.	다음 코드의 결과값은? 
+union uni
+{
+long long a;
+struct st
+{ 
+short b[4]; 
+int c[2]; 
+}st_data;
+}uni_data = { 0x1234567890abcdefLL };
+uni_data.st_data.c[1] = 0x11223344;
+printf("%x, %x", uni_data.st_data.b[2], uni_data.st_data.b[3]);  
+ 5678, 1234
+
+3.	다음 코드의 결과값은?
+enum key{up, left, down=0, right};
+printf("%d, %d", left, right ); 
+ 1, 1
+
