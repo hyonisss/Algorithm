@@ -69,6 +69,7 @@ const unsigned short * Disp[] = {img01, img02, img03, img04};
 #define GREEN	0x07c0
 #define RED		0xf800
 #define YELLOW	0xf7c0
+#define PINK 	0xf8fe
 
 void Basic_Graphics_Test(void);
 void Special_Mode_Test(void);
@@ -164,50 +165,91 @@ struct Object1
 	int speed_step;
 	int move_step;
 };
+//0, 40, 80, 120, 160, 200 240, 280
+//(rand()%8 * 40)
+struct Object1 Basket = {0,1,{0,180},{0,180},{0,180}, {80, 30},WHITE, 4, 80};
+struct Object1 FGreen = {0,1,{120,0},{120,0},{120,0},{40,20},GREEN, 3, 20};
+struct Object1 FBlue = {0,1,{120,300},{120,300},{120,300},{40,30},BLUE, 4, 40};
+struct Object1 FPink = {0,1,{150,300},{150,240},{150,240},{40,30},PINK, 4, 40};
 
-struct Object1 Basket = {0,1,{135,210},{135,210},{120,210}, {80, 30},WHITE, 3, 50};
-//struct Object1 Gun1 = {0,1,{160,300},{160,300},{160,300},{50,40}, 1, 10};
-void Move_Object2(void) {
-	int key ;
-	key = Key_Wait_Key_Pressed();
+void Move_Food(void) {
+	srand(RTC_Get_Time());
+	if(Timer0_Check_Expired()) {
+		FGreen.timer++;
+	}
+	if(FGreen.timer >= FGreen.speed_step) {
+		FGreen.timer = 0;
+		FGreen.pos[0] = rand() % 8 * 40;
+		FGreen.pos_back[1] = FGreen.pos[1] ;
+		FGreen.pos[1] = FGreen.pos[1] + FGreen.move_step;
+		FGreen.move_flag = 1;
+	}
+}
+void Move_Basket(int key) {
+
 	if(key == 2) {
-		Basket.pos_back[0] = Basket.pos[0];
-		Basket.pos[0] = Basket.pos[0] - Basket.move_step;
+		if(Basket.pos[0] <= 0) {
+			return;
+		}
+		else {
+			Basket.pos_back[0] = Basket.pos[0];
+			Basket.pos[0] = Basket.pos[0] - Basket.move_step;
+		}
 	}
 	else if(key == 4) {
+		if(Basket.pos[0] >= 240) {
+			return;
+		}
+		else {
 			Basket.pos_back[0] = Basket.pos[0];
 			Basket.pos[0] = Basket.pos[0] + Basket.move_step;
 		}
- /*	if(Timer0_Check_Expired()) {
-		Basket.timer++;
-		if(Basket.timer >= Basket.speed_step) {
-			Basket.timer = 0;
-			Basket.pos_back[0] = Basket.pos[0];
-			Basket.pos[0] = Basket.pos[0] + Basket.move_step;
-			Basket.move_flag = 1;
-		}
-	}*/
-}
-void Draw_Object2(void) {
-
-	if(Basket.pos[0] >= WIDTH) {
-		Basket.pos[0] = Basket.pos_init[0];
 	}
-	if(Basket.move_flag != 0) {
+}
+void Draw_Food(void) {
+	if(FGreen.pos[1] > 180) {
+		FGreen.pos[1] = FGreen.pos_init[1];
+	}
+	if(FGreen.move_flag != 0) {
+		Lcd_Draw_Bar(FGreen.pos_back[0], FGreen.pos_back[1], FGreen.pos_back[0] + FGreen.size[0], FGreen.pos_back[1] + FGreen.size[1], BACK_COLOR);
+		Lcd_Draw_Bar(FGreen.pos[0], FGreen.pos[1], FGreen.pos[0] + FGreen.size[0], FGreen.pos[1] + FGreen.size[1], GREEN);
+		FGreen.move_flag = 0;
+	}
+}
+void Draw_Basket(void) {
 
+	if(Basket.pos[0] >= 240) { //화면 밖 바구니 벗어남 방지(오른쪽 이동)
+	//	Uart_Printf("%d\n", Basket.pos[0]);
+		Lcd_Draw_Bar(0, 180,100, Basket.pos_back[1] + Basket.size[1], BACK_COLOR);
+		Lcd_Draw_Bar(240, 180, 320, 180 + Basket.size[1], Basket.color);
+
+
+	}
+	if(Basket.pos[0] <0 ) { //화면 밖 바구니 벗어남 방지(오른쪽 이동)
+		Lcd_Draw_Bar(240, 320,80, Basket.pos_back[1] + Basket.size[1], BACK_COLOR);
+		Lcd_Draw_Bar(0, 180, Basket.size[0], 180 + Basket.size[1], Basket.color);
+
+	}
+	else {
 		Lcd_Draw_Bar(Basket.pos_back[0], Basket.pos_back[1], Basket.pos_back[0] + Basket.size[0], Basket.pos_back[1] + Basket.size[1], BACK_COLOR);
 		Lcd_Draw_Bar(Basket.pos[0], Basket.pos[1], Basket.pos[0] + Basket.size[0], Basket.pos[1] + Basket.size[1], Basket.color);
-
 	}
+
 }
 void Level1(void) {
-
+		int key;
 		Game_Init();
-		Draw_Object2();
+		Draw_Food();
+		Draw_Basket(); // 처음 바구니 그리기
 		for(;;) {
-			Move_Object2();
-			Draw_Object2();
-			Key_Wait_Key_Released();
+			Move_Food();
+			Draw_Food();
+			key = Key_Get_Pressed();
+			if(key) {
+				Move_Basket(key);
+				Draw_Basket();
+				Key_Wait_Key_Released();
+			}
 		}
 
 }
@@ -593,7 +635,7 @@ void Draw_Object(void)
 void Game_Init(void)
 {
 	Lcd_Clr_Screen(BACK_COLOR);
-	Timer0_Repeat(20);
+	Timer0_Repeat(500);
 }
 
 void Simple_Example(void)
