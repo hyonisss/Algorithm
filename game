@@ -245,7 +245,7 @@ void Level(void) {
 		Lcd_Draw_BMP(0,0,black);
 		do {
 			Lcd_Printf(100,30,YELLOW,BLACK,2,2,"SUCCESS");
-			Lcd_Printf(110,140,BLUE,YELLOW,1,1," SCORE : ");
+			Lcd_Printf(100,140,BLUE,YELLOW,1,1," VEGE # : ");
 			Lcd_Printf(175,140,PINK,YELLOW,1,1,"%d ", vege_cnt);
 			Lcd_Printf(50,190,WHITE,BLACK,1,1,"press any key to go", lv_cnt+1);
 			Lcd_Printf(210,190,RED,BLACK,1,1,"Level %d", lv_cnt+1);
@@ -253,7 +253,6 @@ void Level(void) {
 			Timer4_Delay(300);
 			Lcd_Draw_Bar(100,30,300,60,BLACK);
 			Lcd_Printf(100,30,GREEN,BLACK,2,2,"SUCCESS");
-
 			Lcd_Draw_Bar(50,190,300,210,BLACK);
 			Timer4_Delay(300);
 			Led_Display(0x5);
@@ -312,6 +311,10 @@ void Move_Food(int time) {
 					Ffood[i].flag_new = 0;
 				}
 				else Ffood[i].pos[1] = Ffood[i].pos[1] + Ffood[i].move_step;
+
+				/////
+
+			//	if(Ffood[i].pos[1]>=180) Ffood[i].move_step = 20;
 				Ffood[i].move_flag = 1;
 			}
 		}
@@ -321,7 +324,8 @@ void Move_Food(int time) {
 void Draw_Food(void) {
 	int i;
 	for(i=0; i<food_var[lv_cnt]/2; i++) {
-		if(Ffood[i].pos[1] >= 180) {
+////
+		if(Ffood[i].pos[1] >= 200) {
 			if(lv_cnt>=3) {Check2(i);}
 			else if(lv_cnt<=2) {Check1(i);}
 			Ffood[i].pos[1] = 0;
@@ -330,6 +334,9 @@ void Draw_Food(void) {
 			if(score<=0) {GameOver(); return;}
 			Ffood[i].flag=0;
 			Lcd_Draw_Bar(Ffood[i].pos_back[0], Ffood[i].pos_back[1], Ffood[i].pos_back[0] + Ffood[i].size[0], Ffood[i].pos_back[1] + Ffood[i].size[1], WHITE);
+			if(lv_cnt<=1) {Lcd_Draw_BMP(Bas.pos[0],Bas.pos[1],basket);}
+			else if(lv_cnt>=2) {Lcd_Draw_BMP(Bas.pos[0],Bas.pos[1],basket2);}
+
 		}
 		if(Ffood[i].move_flag != 0 && Ffood[i].flag != 0) {
 			Lcd_Draw_Bar(Ffood[i].pos_back[0], Ffood[i].pos_back[1], Ffood[i].pos_back[0] + Ffood[i].size[0], Ffood[i].pos_back[1] + Ffood[i].size[1], WHITE);
