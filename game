@@ -110,14 +110,18 @@ void User_Main(void)
 	 	Lcd_Clr_Screen(RED);
 	    Lcd_Get_Info_BMP(&xtmp, &ytmp, start);
 	    Lcd_Draw_BMP((160-(xtmp/2)), (120-(ytmp/2)), start);
-		Lcd_Printf(120,100,YELLOW,RED,1,1,"VEGAN GAME");
-		Lcd_Printf(90,130,WHITE,BLACK,1,1,"Game Start : Press 1");
-		Lcd_Printf(85,150,WHITE,BLACK,1,1,"How to Play : Press 2");
-					do{
+		do{
+		Lcd_Printf(80,80,YELLOW,RED,2,2,"VEGAN GAME");
+		Timer4_Delay(300);
+		Lcd_Printf(80,80,GREEN,RED,2,2,"VEGAN GAME");
+
+		Lcd_Printf(80,150,WHITE,BLACK,1,1,"Game Start : Press 1");
+		Lcd_Printf(75,170,WHITE,BLACK,1,1,"How to Play : Press 2");
+
 							Led_Display(0x5);
-							Timer4_Delay(100);
+							Timer4_Delay(50);
 							Led_Display(0x6);
-							Timer4_Delay(100);
+							Timer4_Delay(50);
 						}while(!Key_Get_Pressed());
 				u = Key_Wait_Key_Pressed ();
 				switch(u) {
@@ -163,15 +167,17 @@ int lv_cnt = 0;
 int check[10] = {0};
 int food_var[4] = {4,6,8,8};
 int bas_right[4] = {0,0,40,40};
+int vege_cnt = 0; // 상추 먹은 개수
 void Level(void) {
 		srand(RTC_Get_Time());
 		struct Food init = {0,1,0,0,{0,0},{0,0},{40,30}, 0, 6 - lv_cnt, 30}; // timer, move_flag, flag
 		int key;
 		int i, tmp;
 		lv_flag = 0;
+		vege_cnt = 0;
 		score=3;
 		volatile int time = 0;
-
+		Key_Wait_Key_Released();
 		do{
 					Lcd_Draw_BMP(0,0,Disp2[lv_cnt]);
 			}while(!Key_Get_Pressed());
@@ -236,7 +242,24 @@ void Level(void) {
 								}
 
 		}
+		Lcd_Draw_BMP(0,0,black);
+		do {
+			Lcd_Printf(100,30,YELLOW,BLACK,2,2,"SUCCESS");
+			Lcd_Printf(110,140,BLUE,YELLOW,1,1," SCORE : ");
+			Lcd_Printf(175,140,PINK,YELLOW,1,1,"%d ", vege_cnt);
+			Lcd_Printf(50,190,WHITE,BLACK,1,1,"press any key to go", lv_cnt+1);
+			Lcd_Printf(210,190,RED,BLACK,1,1,"Level %d", lv_cnt+1);
+			Lcd_Printf(110,60,RED,BLACK,2,2,"LEVEL%D",lv_cnt);
+			Timer4_Delay(300);
+			Lcd_Draw_Bar(100,30,300,60,BLACK);
+			Lcd_Printf(100,30,GREEN,BLACK,2,2,"SUCCESS");
 
+			Lcd_Draw_Bar(50,190,300,210,BLACK);
+			Timer4_Delay(300);
+			Led_Display(0x5);
+			Led_Display(0x6);
+
+		}while(!Key_Get_Pressed());
 		Level();
 
 
@@ -302,9 +325,9 @@ void Draw_Food(void) {
 			if(lv_cnt>=3) {Check2(i);}
 			else if(lv_cnt<=2) {Check1(i);}
 			Ffood[i].pos[1] = 0;
-			Lcd_Printf(70,225, YELLOW,BLACK, 1,1,"%d", score);
+			Lcd_Printf(55,225, YELLOW,BLACK, 1,1,"%d", score);
 			if(score==10) {lv_cnt++; lv_flag=1; return;}
-			if(score<0) GameOver();
+			if(score<=0) {GameOver(); return;}
 			Ffood[i].flag=0;
 			Lcd_Draw_Bar(Ffood[i].pos_back[0], Ffood[i].pos_back[1], Ffood[i].pos_back[0] + Ffood[i].size[0], Ffood[i].pos_back[1] + Ffood[i].size[1], WHITE);
 		}
@@ -322,7 +345,7 @@ void Check1(int num) {
 	int idx_fd = Ffood[num].image;
 	if(idx ==0 || idx==1) {
 		if(Bas.pos[0]>=0 && Bas.pos[0] <80) {
-			if(!(idx_fd%2)) {score++; return;}
+			if(!(idx_fd%2)) {score++; vege_cnt++; return;}
 			else if (idx_fd==1 || idx_fd==5){score-=2; return;}
 			else if (idx_fd==3) {score--; return;}
 			else if (idx_fd==7) GameOver();
@@ -331,7 +354,7 @@ void Check1(int num) {
 	}
 	else if(idx == 2 || idx ==3) {
 		if(Bas.pos[0]>=80 && Bas.pos[0] <160) {
-			if(!(idx_fd%2)) {score++; return;}
+			if(!(idx_fd%2)) {score++; vege_cnt++; return;}
 			else if (idx_fd==1 || idx_fd==5){score-=2; return;}
 			else if (idx_fd==3) {score--; return;}
 			else if (idx_fd==7) GameOver();
@@ -340,7 +363,7 @@ void Check1(int num) {
 	}
 	else if(idx ==4 || idx == 5) {
 		if(Bas.pos[0]>=160 && Bas.pos[0] <240) {
-			if(!(idx_fd%2)) {score++; return;}
+			if(!(idx_fd%2)) {score++; vege_cnt++; return;}
 			else if (idx_fd==1 || idx_fd==5){score-=2; return;}
 			else if (idx_fd==3) {score--; return;}
 			else if (idx_fd==7) GameOver();
@@ -349,7 +372,7 @@ void Check1(int num) {
 	}
 	else {
 		if(Bas.pos[0]>=240) {
-			if(!(idx_fd%2)) {score++; return;}
+			if(!(idx_fd%2)) {score++; vege_cnt++; return;}
 			else if (idx_fd==1 || idx_fd==5){score-=2; return;}
 			else if (idx_fd==3) {score--; return;}
 			else if (idx_fd==7) GameOver();
@@ -366,7 +389,7 @@ void Check2(int num) {
 			if(idx_fd>=7)GameOver();
 			else if (idx_fd==1 || idx_fd==5){score-=2; return;}
 			else if (idx_fd==3) {score--; return;}
-			else if (!(idx_fd%2)){score++; return;}
+			else if (!(idx_fd%2)){score++; vege_cnt++; return;}
 	}
 	else return;
 
@@ -432,8 +455,8 @@ void Game_Init(void)
 	Lcd_Clr_Screen(BACK_COLOR);
 	Lcd_Draw_Bar(0,220,320,240,BLACK);
 	Timer0_Repeat(600);
-	Lcd_Printf(5,225, BLUE, YELLOW, 1,1,"%s", "score :");
-	Lcd_Printf(70,225, YELLOW,BLACK, 1,1,"%d", score);
+	Lcd_Printf(7,225, WHITE, BLUE, 1,1,"%s", "score");
+	Lcd_Printf(55,225, YELLOW,BLACK, 1,1,"%d", score);
 	switch(lv_cnt) {
 	case 0: Timer0_Repeat(600); Lcd_Printf(270,225, PINK, BLACK, 1,1,"%s", "LEVEL1"); break;
 	case 1: Timer0_Repeat(600); Lcd_Printf(270,225, PINK, BLACK, 1,1,"%s", "LEVEL2"); break;
@@ -444,20 +467,28 @@ void Game_Init(void)
 
 
 void GameOver(void) {
-	Lcd_Draw_BMP(0,0,back);
-	do {
-			Lcd_Draw_BMP(0,0,back);
-			Lcd_Printf(65,160,BLUE,YELLOW,1,1,"Try Again : ");
-			Lcd_Printf(162,160,PINK,YELLOW,1,1,"Push Button");
-			Led_Display(0x5);
-			Timer4_Delay(100);
-			Led_Display(0x6);
-						Timer4_Delay(100);
-						Led_Display(0x7);
-									Timer4_Delay(100);
-									Led_Display(0x8);
-											Timer4_Delay(100);
-		}while(!Key_Get_Pressed());
+	Lcd_Draw_BMP(0,0,black);
+			do {
+				Lcd_Printf(90,30,RED,BLACK,2,2,"GAME OVER");
+
+
+
+				if(score<0) score=0;
+				Lcd_Printf(110,140,BLUE,YELLOW,1,1," SCORE : ");
+				Lcd_Printf(175,140,PINK,YELLOW,1,1,"%d ", score);
+
+				Lcd_Printf(65,160,WHITE,BLACK,1,1,"Try Again : ");
+				Lcd_Printf(162,160,RED,BLACK,1,1,"Push Button");
+				Timer4_Delay(500);
+				Lcd_Draw_Bar(90,30,300,60,BLACK);
+				Lcd_Draw_Bar(50,190,300,210,BLACK);
+				Led_Display(0x5);
+				Timer4_Delay(50);
+				Led_Display(0x6);
+				Timer4_Delay(50);
+
+			}while(!Key_Get_Pressed());
+
 			lv_cnt = 0;
 			Level();
 
