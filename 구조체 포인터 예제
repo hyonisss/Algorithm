@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+struct st
+{
+	int num;
+	char name[10];
+	int score;
+};
+
+void cheat1(struct st (*p)[4])
+{
+	(*p)[1].score = 200;
+}
+
+
+void main(void)
+{
+	struct st math[4] = { {1,"LEW",10}, {2,"KIM",20}, {3,"SONG",30}, {4,"MOON",40} };
+
+	cheat1(&math);
+	printf("%s: %d점\n", math[1].name, math[1].score);
+
+
+}
