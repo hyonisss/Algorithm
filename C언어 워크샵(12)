@@ -1,0 +1,169 @@
+12일차 C언어 기본 워크샵 
+ 
+ 코드 구현 문제는 파일로 제출하고, 나머지 답안은 A4용지에 수기로 작성하여 제출하시오. 
+ 
+[ 9-3. 동적 메모리 할당] 
+ 
+1.	정수 n개 만큼 heap에 할당 받는 코드를 구현하시오. 
+[문제 설명] 1개의 정수 n을 입력 받아 정수 n개 만큼 heap에 할당하고 n개 만큼 정수를 입력 받아 저장하고 인쇄한다. 
+[입력 예시] 5 
+ 	    10 20 30 40 50 
+[출력 예시] 10 20 30 40 50 
+ #include <stdio.h> 
+#include <stdlib.h>
+
+void main(void)
+{
+	int i, num;
+	int *p;
+	scanf("%d", &num);
+	p = malloc(num * sizeof(int));
+	if (p == 0x00) return;
+	for (i = 0; i < num; i++)
+	{
+		scanf("%d", (p + i));
+	}
+	for (i = 0; i < num; i++)
+	{
+		printf("%d ", *(p + i));
+	}
+	free(p);
+}
+
+2.	본인의 이름을 입력 받아 heap에 동적 할당 하는 코드를 구현하시오. 
+[문제 설명] 이름을 입력 받아 길이만큼 calloc함수를 이용하여 할당 받아 이름을 저장하고 인쇄한다 
+[입력 예시] HongGildong [출력 예시] HongGildong 
+ 
+#include<stdio.h> int main(void) 
+{ 
+#include <stdio.h> 
+#include <stdlib.h>
+
+void main(void)
+{
+	int i=0;
+	char temp[100];
+	char *p;
+
+	scanf("%s", temp);
+	while (temp[i++]);
+	p = calloc(i, sizeof(char));
+	if (p == 0x0) return;
+
+	for (i = 0;;i++)
+	{
+		if (temp[i] == '\0') {
+			p[i] = temp[i];
+			break;
+		}
+		p[i] = temp[i];
+	}
+
+	for (i = 0;p[i]!='\0'; i++)
+	{
+		printf("%c", p[i]);
+	}
+	free(p);
+}
+} 
+ 
+ 
+[ 9-4. 구조체배열, 구조체포인터] 
+ 
+3.	구조체 배열을 이용한 개인 신상 정보를 구현하는 함수를 완성하시오. 
+[문제 설명] 다음과 같은 구조체 타입을 선언하여 구현한다. 
+①	구조체 태그 : st_info 
+②	구조체 멤버 : 사번(id), 이름(name), 나이(age), 연락처(tel) 
+③	구조체 배열 : struct st_info info[4]; 
+[실행 예시] 
+input: 1 kim 20 111-1111 input: 2 lee 30 222-2222 input: 3 hong 25 333-3333 input: 4 lew 29 444-4444 
+ 
+사번    이름    나이    연락처 
+1	kim     20      111-1111 
+2	lee     30      222-2222 
+3	hong    25      333-3333 
+4	lew     29      444-4444 
+ 
+사번    이름    나이    연락처 
+3       hong    25      333-3333 
+1	kim     20      111-1111 
+2	lee     30      222-2222 
+4       lew     29      444-4444 
+ 
+ 
+ 
+// 1] st_info 구조체 설계한다. 
+struct st_info 
+{ 
+int id;
+	char name[5];
+	int age;
+	char tel[10];
+}; 
+// 2] 4명의 자료를 입력 받는 Data_Input 함수를 설계한다 
+void Data_Input(struct st_info *p) 
+{ 
+	for (int i = 0; i < 4; i++) 
+	{
+		printf("input: ");
+		scanf("%d %s %d %s", &(p[i].id), &(p[i].name), &(p[i].age), &(p[i].tel));
+	}
+} 
+// 3] 4명의 자료를 출력하는 Data_Print 함수를 설계한다. 
+void Data_Print(struct st_info *p) 
+{ 
+printf("\n\n");
+	printf("사번  이름    나이   연락처\n");
+	for (int i = 0; i < 4; i++)
+	{
+		printf("%d     %s     %d     %s\n", (*(p+i)).id, (*(p + i)).name, (*(p + i)).age, (*(p + i)).tel);
+	}
+} 
+// 4] 4명의 자료를 이름순으로 정렬하는 Data_Sort 함수를 설계한다 
+void Data_Sort(struct st_info *p) 
+{ 
+struct st_info tmp;
+	printf("\n\n");
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = i+1; j < 4; j++)
+		{
+			if ((*(p + i)).name[0]> (*(p + j)).name[0])
+			{
+				tmp = p[i];
+				p[i] = p[j];
+				p[j] = tmp;
+			}
+
+		}
+}
+} 
+void main(void) 
+{ 
+ 	structst_info info[4]; 
+ 	Data_Input(info); 	 
+ 	Data_Print(info); 
+ 	Data_Sort(info); 	 
+ 	Data_Print(info); 
+} 
+ 
+4.	구조체 포인터 변수p를 이용하여 2, “park”의 ‘r’을 출력하고자 한다. 코드를 완성하시오 
+struct st {    
+ 	int no;   	char *name;    	struct st *p;  
+}; 
+void main(void) 
+{ 
+ 	struct st x[3]={{1, "kim", &x[1]}, {2, "lew", &x[2]}, {3, "park", 0}};  	struct st *p;  	p = &x[0];  
+ 	printf("2 인쇄 => %d\n", p->p->no  );    
+printf("r 인쇄 => %c\n", p->p->p->name[2]);   
+} 
+ 
+5.	다음 코드에서 공용체 포인터 변수 p를 이용하여 a변수의 값 0x34를 출력하는 코드를 구현하시오. 
+union uni { 
+ 	int a;  	char b[4]; 
+}x={0x12345678}; void main(void) 
+{ 
+ 	union uni *p=&x; 
+ 	printf("%x", x.b[2] ) ;   
+} 
+ 
