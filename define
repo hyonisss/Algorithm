@@ -1,0 +1,8 @@
+#define invert_bit(data, bit) ((data) ^ (0x1u<<(bit)))
+#define clear_bit(data, bit) ((data) & (0x1u<<~(bit)))
+#define set_area(data, bits, bit) ((data) | (unsigned int)(bits) << (bit))
+#define clear_area(data, bits, bit) ((data) & ~(unsigned int)(bits)<<(bit))
+#define check_bit_set(data, bit) ((data) >> (bit) & ~(unsigned int)(0xfffffffe))
+#define check_bit_clear(data, bit) !((data) >> (bit) & ~(unsigned int)(0xfffffffe))
+#define write_block(data, bits, value, bit) ((data) & ~(unsigned int)(bits) << (bit) | (unsigned int)(value) << (bit))
+#define EXTRACT_AREA(data, bits, bit) (((data) >> (bit))) & (bits))
