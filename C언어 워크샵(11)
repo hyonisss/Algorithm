@@ -1,0 +1,36 @@
+14일차 C언어 기본 워크샵 
+ 코드 구현 문제는 파일로 제출하고, 나머지 답안은 A4용지에 수기로 작성하여 제출하시오. 
+[ 11 선행처리기 ] 
+1.	원의 넓이 구하는 매크로 Area(r)을 설계하시오.  
+[조건] 3.14는 매크로 상수 PI로 선언하여 구현한다. 
+[공식] 원의 넓이 : 반지름 * 반지름 * 3.14 int a=3;  printf( "원의 넓이=%f\n", Area(a) ); 
+ #define PI 3.14
+#define Area(r) r*r* PI
+ 
+2.	교재 15번문제(198p) set_bit 함수를 Set_Bit( data, bit )매크로로 구현하시오.  
+int a=3; 
+Set_Bit(a, 3); 
+ #Set_Bit(data, bit) ((data) | 0x1u<<(bit))
+ 
+3.	교재 23번문제(201p) write_block 함수를 Write_Block(data, bits, value, bit)매크로로 구현하시오.  
+int a=3; 
+Write_Block(a, 7,2,0); 
+ 
+ 
+4.	struct st {   int a; char b; }; 구조체 타입을 typedef을 사용하여 선언하는 코드를 구현하시오.  
+                                ;  ST x={1, ‘A’}; 
+  
+ 
+5.	다음 코드의 인쇄 결과는?   
+#define  DEBUG   0 void main(void) 
+{ 
+#ifdef DEBUG 
+ 	#undef DEBUG  
+ 	#define DEBUG 1 
+#endif 
+#if DEBUG 
+ 	printf(“SAMSUNG”); 
+#else 
+ 	printf(“SCSA”); 
+#endif 
+} 
