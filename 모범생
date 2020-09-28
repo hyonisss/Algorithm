@@ -1,0 +1,75 @@
+[문제 설명]
+N명의 점수가 주어질 때 상위 3명의 ID를 출력하는 프로그램을 작성하시오.
+
+[입력 설명]
+첫 줄에 학생 수 N(4≤N≤30,000)이 주어진다.
+둘째 줄에는 N개의 점수가 공백으로 구분되어 ID 순으로 주어진다. (각 점수는 0 이상 10억 이하)
+맨 먼저 입력된 점수는 ID가 1인 학생의 점수이고, 이후부터 순서대로 ID가 1씩 증가한다.
+
+[출력 설명]
+점수가 가장 높은 학생의 ID 3개를 순서대로 출력한다.
+만일 점수가 같은 경우는 ID가 작은 학생을 선택한다.
+
+[입력 예시]
+8
+70 30 70 40 60 50 90 80 
+
+[출력 예시]
+7 8 1 
+
+
+#include <stdio.h>
+
+int N;
+typedef struct st
+{
+	int id;
+	int score;
+}ST;
+ST x[30000 + 10];
+
+void quicksort(int s, int e)
+{
+	int L = s, t = s, p = e;
+	ST tmp;
+	if (s >= e) return;
+	for (; L < e; L++)
+	{
+		if (x[L].score < x[p].score)
+		{
+			tmp = x[L];
+			x[L] = x[t];
+			x[t] = tmp;
+			t++;
+		}
+		if (x[L].score == x[p].score)
+		{
+			if (x[L].id > x[p].id)
+			{
+				tmp = x[L];
+				x[L] = x[t];
+				x[t] = tmp;
+				t++;
+			}
+		}
+	}
+	tmp = x[t];
+	x[t] = x[p];
+	x[p] = tmp;
+
+	quicksort(s, t - 1);
+	quicksort(t + 1, e);
+}
+void main(void)
+{
+	int i;
+	scanf("%d", &N);
+	for (i = 0; i < N; i++)
+	{
+		x[i].id = i + 1;
+		scanf("%d", &x[i].score);
+	}
+	quicksort(0, N - 1);
+
+	printf("%d %d %d", x[N - 1].id, x[N - 2].id, x[N - 3].id);
+}
