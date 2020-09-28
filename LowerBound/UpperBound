@@ -1,0 +1,70 @@
+[이진탐색]
+
+
+#include <stdio.h>
+
+int num[50000 + 10];
+int BinaryLower(int s, int e, int d)
+{
+	int sol = -1;
+	while (s <= e)
+	{
+		int mid = (s + e) / 2;
+		if (d == num[mid])
+		{
+			sol = mid;
+			e = mid - 1;
+		}
+		else if (d < num[mid])
+			e = mid - 1;
+		else
+			s = mid + 1;
+	}
+	return sol;
+
+}
+int BinaryUpper(int s, int e, int d)
+{
+	int sol = -1;
+	while (s <= e)
+	{
+		
+		int mid = (s + e) / 2;
+		if (d == num[mid])
+		{
+			sol = mid;
+			s = mid + 1;
+		}
+		else if (d < num[mid])
+			e = mid - 1;
+		else
+			s = mid + 1;
+	}
+	return sol;
+
+}
+void main(void)
+{
+	int N, T;
+	int i, s=0, d;
+	int lower, upper;
+	scanf("%d", &N);
+	for (i = 0; i < N; i++)
+	{
+		scanf("%d", &num[i]);
+	}
+	scanf("%d", &T);
+	for (i = 0; i < T; i++)
+	{
+		
+		scanf("%d", &d);
+		lower = BinaryLower(s, N - 1, d);
+		if (lower != -1)
+		{
+			upper = BinaryUpper(s, N - 1, d);
+			printf("%d ", upper - lower + 1);
+		}
+		else printf("0 ");
+
+	}
+}
