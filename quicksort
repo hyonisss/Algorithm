@@ -1,0 +1,39 @@
+#include <stdio.h>
+int a[30000 + 10];
+int N;
+void quicksort(int s, int e)
+{
+	int l, p=e, t;
+	int tmp;
+	if (s >= e) return;
+	for (l = s, t = s; l < e; l++)
+	{
+		if (a[l] < a[p])
+		{
+			tmp = a[l];
+			a[l] = a[t];
+			a[t] = tmp;
+			t++;
+		}
+	}
+	tmp = a[t];
+	a[t] = a[p];
+	a[p] = tmp;
+
+	quicksort(s, t - 1);
+	quicksort(t + 1, e);
+}
+void main(void)
+{
+	int i;
+	scanf("%d", &N);
+	for (i = 0; i < N; i++)
+	{
+		scanf("%d", &a[i]);
+	}
+	quicksort(0, N - 1);
+	for (i = 0; i < N; i++)
+	{
+		printf("%d ", a[i]);
+	}
+}
